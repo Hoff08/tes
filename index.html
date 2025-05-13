@@ -1,517 +1,374 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login / Cadastro Animado</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Exemplos de Carrossel - Estilo Rarible</title>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f0f2f5; /* Light background for contrast */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            min-height: 100vh;
-        }
-
-        .container {
-            background-color: #fff;
-            border-radius: 10px;
-            box-shadow: 0 14px 28px rgba(0, 0, 0, 0.2), 0 10px 10px rgba(0, 0, 0, 0.18);
-            position: relative;
-            overflow: hidden;
-            width: 960px;
-            max-width: 95%;
-            min-height: 600px;
-            opacity: 0;
-            transform: translateY(20px);
-            /* Transition applied for fade in/out */
-            transition: opacity 0.6s ease, transform 0.6s ease;
-        }
-
-        /* Class to control visibility and animation */
-        .container.visible {
-             opacity: 1;
-             transform: translateY(0);
-        }
-
-        .container.hidden {
-            opacity: 0;
-            transform: scale(0.95); /* You can adjust the out animation */
-        }
-
-        .form-container {
-            position: absolute;
-            top: 0;
-            height: 100%;
-            transition: all 0.6s ease-in-out;
-        }
-
-        .sign-in-container {
-            left: 0;
-            width: 50%;
-            z-index: 2;
-            background-color: #2c3e50;
-            color: #ecf0f1;
-        }
-
-        .sign-up-container {
-            left: 0;
-            width: 50%;
-            opacity: 0;
-            z-index: 1;
-            background-color: #2c3e50;
-             color: #ecf0f1;
-        }
-
-        .container.right-panel-active .sign-in-container {
-            transform: translateX(100%);
-        }
-
-        .container.right-panel-active .sign-up-container {
-            transform: translateX(100%);
-            opacity: 1;
-            z-index: 5;
-            animation: show 0.6s;
-        }
-
-        @keyframes show {
-            0%, 49.99% {
-                opacity: 0;
-                z-index: 1;
-            }
-            50%, 100% {
-                opacity: 1;
-                z-index: 5;
-            }
-        }
-
-        .overlay-container {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            width: 50%;
-            height: 100%;
-            overflow: hidden;
-            transition: transform 0.6s ease-in-out;
-            z-index: 100;
-        }
-
-        .container.right-panel-active .overlay-container {
-            transform: translateX(-100%);
-        }
-
-        .overlay {
-             background: #7f5bff;
-            background: linear-gradient(to right, #7f5bff, #a078ff);
-             background-repeat: no-repeat;
-            background-size: cover;
-            background-position: 0 0;
-            color: #FFFFFF;
-            position: relative;
-            left: -100%;
-            height: 100%;
-            width: 200%;
-            transform: translateX(0);
-            transition: transform 0.6s ease-in-out;
-        }
-
-        .overlay::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(
-                -45deg,
-                rgba(238, 119, 82, 0.2),
-                rgba(231, 60, 126, 0.25),
-                rgba(35, 166, 213, 0.2),
-                rgba(155, 89, 182, 0.25)
-            );
-            background-size: 400% 400%;
-            opacity: 0.8;
-            z-index: 0;
-            animation: gradientBGOverlay 15s ease infinite;
-            border-radius: inherit;
-        }
-        @keyframes gradientBGOverlay {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .container.right-panel-active .overlay {
-            transform: translateX(50%);
-        }
-
-        .overlay-panel {
-            position: absolute;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            padding: 0 40px;
-            text-align: center;
-            top: 0;
-            height: 100%;
-            width: 50%;
-            transform: translateX(0);
-            transition: transform 0.6s ease-in-out;
-            z-index: 1;
-        }
-
-        .overlay-left {
-            transform: translateX(-20%);
-        }
-
-        .container.right-panel-active .overlay-left {
-            transform: translateX(0);
-        }
-
-        .overlay-right {
-            right: 0;
-            transform: translateX(0);
-        }
-
-        .container.right-panel-active .overlay-right {
-            transform: translateX(20%);
-        }
-
-        form {
-            background-color: #2c3e50;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            padding: 0 50px;
-            height: 100%;
-            text-align: center;
-        }
-
-        h1 {
-            font-weight: bold;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
             margin: 0;
-            margin-bottom: 20px;
-             font-size: 2.2rem;
+            background-color: #0d1117; /* Fundo escuro similar ao GitHub/Rarible */
+            color: #c9d1d9; /* Texto claro padrão */
         }
-
-        h2 {
+        .page-container { /* Renomeado de .container para evitar conflito com o .swiper-container */
+            max-width: 1400px; /* Mais largo para acomodar melhor os cards */
+            margin: 30px auto;
+            padding: 20px;
+        }
+        h1 {
             text-align: center;
-             font-size: 2rem;
-             font-weight: 700;
-             color: #fff;
-             margin-bottom: 15px;
+            color: #e6edf3;
+            margin-bottom: 40px;
+        }
+        .carousel-section {
+            margin-bottom: 70px;
+        }
+        .carousel-section h2 {
+            font-size: 24px;
+            color: #e6edf3;
+            margin-bottom: 25px;
+            padding-left: 10px; /* Pequeno recuo para alinhar com os cards */
+            font-weight: 600;
         }
 
-        p {
-            font-size: 14px;
-            font-weight: 300;
-            line-height: 20px;
-            letter-spacing: 0.5px;
-            margin: 20px 0 30px;
-             color: #eee;
+        /* --- ESTILOS PARA O CARROSSEL DE CARDS (ESTILO RARIBLE) --- */
+        .card-carousel .swiper-container {
+            padding-top: 10px; /* Espaço para sombra do card ativo */
+            padding-bottom: 30px; /* Espaço para paginação */
         }
 
-        input {
-            background-color: #34495e;
-            border: none;
-            padding: 12px 15px;
-            margin: 8px 0;
+        .card-carousel .swiper-slide {
+            width: 280px; /* Largura do card - SwiperJS vai usar isso com slidesPerView: 'auto' */
+            height: auto; /* Altura será definida pelo conteúdo */
+            background-color: #161b22; /* Fundo do card */
+            border-radius: 16px; /* Cantos arredondados */
+            overflow: hidden; /* Para arredondar a imagem junto com o card */
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card-carousel .swiper-slide:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+        }
+
+        .card-carousel .card-image-container {
             width: 100%;
-            border-radius: 25px;
-            color: #ecf0f1;
-             font-size: 0.9rem;
-             outline: none;
-        }
-         input::placeholder {
-            color: #bdc3c7;
-        }
-         input:focus {
-             background-color: #4a627a;
+            height: 200px; /* Altura da imagem do card */
+            overflow: hidden;
         }
 
-        button {
-            border-radius: 20px;
-            border: 1px solid #7f5bff;
-            background: linear-gradient(90deg, #a078ff, #7f5bff);
-            color: #FFFFFF;
-            font-size: 12px;
-            font-weight: bold;
-            padding: 12px 45px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            transition: transform 80ms ease-in, background 0.3s ease;
-            cursor: pointer;
-            margin-top: 15px;
+        .card-carousel .card-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
         }
 
-        button:active {
-            transform: scale(0.95);
+        .card-carousel .card-content {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1; /* Para o .card-info-bottom ficar no rodapé */
         }
 
-        button:focus {
-            outline: none;
+        .card-carousel .card-collection-info {
+            display: flex;
+            align-items: center;
+            font-size: 13px;
+            color: #8b949e; /* Cinza mais claro para info secundária */
+            margin-bottom: 8px;
         }
-        button:hover {
-             background: linear-gradient(90deg, #8e6ae6, #714cdc);
+        .card-carousel .collection-name {
+            margin-right: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
-
-
-        button.ghost-btn {
-            background-color: transparent;
-            border-color: #FFFFFF;
-        }
-         button.ghost-btn:hover {
-             background-color: rgba(255, 255, 255, 0.1);
-        }
-
-
-        .social-container {
-            margin: 20px 0;
-        }
-
-        .social-container a {
-            border: 1px solid #dddddd4f;
+        .card-carousel .status-dot {
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
-            display: inline-flex;
+            background-color: #30a14e; /* Verde para online/ativo (exemplo) */
+        }
+        .card-carousel .status-dot.blue { background-color: #58a6ff; }
+
+
+        .card-carousel .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #e6edf3; /* Título mais claro */
+            margin: 0 0 12px 0;
+            line-height: 1.3;
+            /* Para truncar texto longo com "..." */
+            display: -webkit-box;
+            -webkit-line-clamp: 2; /* Número de linhas */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            min-height: 46px; /* (18px * 1.3 * 2) para garantir espaço para 2 linhas */
+        }
+
+        .card-carousel .card-info-bottom {
+            margin-top: auto; /* Empurra para o final do card-content */
+            padding-top: 12px;
+            border-top: 1px solid #30363d; /* Linha divisória sutil */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 14px;
+        }
+        .card-carousel .info-label {
+            font-size: 12px;
+            color: #8b949e;
+            margin-bottom: 2px;
+            display: block;
+        }
+        .card-carousel .info-value {
+            color: #c9d1d9;
+            font-weight: 500;
+        }
+        .card-carousel .info-value.price {
+            color: #58a6ff; /* Cor de destaque para preço */
+            font-weight: 600;
+        }
+        .card-carousel .info-left, .card-carousel .info-right {
+            display: flex;
+            flex-direction: column;
+        }
+        .card-carousel .info-right {
+            text-align: right;
+        }
+
+        /* Estilo para botões de navegação e paginação do Swiper */
+        .card-carousel .swiper-button-next,
+        .card-carousel .swiper-button-prev {
+            color: #c9d1d9;
+            background-color: rgba(48, 54, 61, 0.7); /* Fundo semi-transparente */
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            transition: background-color 0.2s ease;
+        }
+        .card-carousel .swiper-button-next:hover,
+        .card-carousel .swiper-button-prev:hover {
+            background-color: rgba(66, 74, 82, 0.9);
+        }
+        .card-carousel .swiper-button-next::after,
+        .card-carousel .swiper-button-prev::after {
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .card-carousel .swiper-pagination-bullet {
+            background-color: #8b949e;
+            opacity: 0.7;
+        }
+        .card-carousel .swiper-pagination-bullet-active {
+            background-color: #58a6ff; /* Cor da paginação ativa */
+            opacity: 1;
+        }
+        /* Esconder setas em telas menores se preferir */
+        @media (max-width: 768px) {
+            .card-carousel .swiper-button-next,
+            .card-carousel .swiper-button-prev {
+                display: none;
+            }
+        }
+
+        /* --- FIM DOS ESTILOS PARA O CARROSSEL DE CARDS --- */
+
+        /* Outros estilos de carrossel (pode manter ou remover se não for usar) */
+        .swiper-slide.demo-slide { /* Estilo genérico para outros carrosseis */
+            display: flex;
             justify-content: center;
             align-items: center;
-            margin: 0 5px;
-            height: 40px;
-            width: 40px;
-             color: #ecf0f1;
-             text-decoration: none;
-             transition: background-color 0.3s ease;
-        }
-         .social-container a:hover {
-             background-color: #ffffff2a;
-         }
-
-        .error-message {
-            color: #e74c3c;
-            font-size: 0.9em;
-            margin-top: 10px;
-            min-height: 1.2em;
-            text-align: center;
-            width: 100%;
-            max-width: 350px;
-        }
-        .success-message { /* Still keep for signup potentially */
-            color: #2ecc71;
-            font-size: 0.9em;
-            margin-top: 10px;
-             min-height: 1.2em;
-             text-align: center;
-             width: 100%;
-             max-width: 350px;
-        }
-
-        @media (max-width: 960px) {
-             .container {
-                 width: 95%;
-                 min-height: auto;
-            }
-             .form-container {
-                 width: 100%;
-                 height: auto;
-                 position: relative;
-                 min-height: 300px;
-                 transition: none;
-             }
-             .sign-in-container {
-                 top: 0;
-                 left: 0;
-                 z-index: 2;
-             }
-             .sign-up-container {
-                 top: auto;
-                 bottom: 0;
-                 left: 0;
-                 opacity: 1;
-                 z-index: 2;
-                 background-color: #34495e;
-             }
-
-             .overlay-container {
-                 display: none;
-             }
-             .sign-in-container,
-             .sign-up-container,
-             .container.right-panel-active .sign-in-container,
-             .container.right-panel-active .sign-up-container {
-                transform: none !important;
-             }
-             h1 { font-size: 1.8rem; }
-             form { padding: 0 20px; }
-        }
-
-        @media (max-width: 480px) {
-             h1 { font-size: 1.6rem; }
-             form { padding: 0 15px; }
-             button { padding: 10px 30px; }
+            height: 200px;
+            background-color: #333;
+            font-size: 24px;
+            color: #fff;
+            border-radius: 8px;
         }
 
     </style>
 </head>
 <body>
+    <div class="page-container">
+        <h1>Demonstração de Carrosséis</h1>
 
-    <div class="container visible" id="container"> <!-- Start visible -->
-        <!-- Sign Up Form -->
-        <div class="form-container sign-up-container">
-            <form id="signup-form">
-                <h1>Cadastro</h1>
-                <div class="form-group">
-                    <label for="name">Nome</label>
-                    <input type="text" id="name" name="name" required>
+        <!-- Exemplo 2: Carrossel de Cards (Estilo Rarible) -->
+        <div class="carousel-section card-carousel">
+            <h2>🔥 TOP 10</h2>
+            <div class="swiper-container"> <!-- Container específico para este Swiper -->
+                <div class="swiper-wrapper">
+                    <!-- Card 1 -->
+                    <div class="swiper-slide">
+                        <div class="card-image-container">
+                            <img src="https://via.placeholder.com/280x200/FF6B6B/FFFFFF?Text=NFT+Art+1" alt="NFT Art 1">
+                        </div>
+                        <div class="card-content">
+                            <div class="card-collection-info">
+                                <span class="collection-name">CryptoPunks</span>
+                                <span class="status-dot blue"></span>
+                            </div>
+                            <h3 class="card-title">Punk #7804 Exemplo com Título Longo para Testar Quebra de Linha</h3>
+                            <div class="card-info-bottom">
+                                <div class="info-left">
+                                    <span class="info-label">Status</span>
+                                    <span class="info-value" style="color: #30a14e;">Minting</span>
+                                </div>
+                                <div class="info-right">
+                                    <span class="info-label">Valor</span>
+                                    <span class="info-value price">3 XTZ</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 2 -->
+                    <div class="swiper-slide">
+                        <div class="card-image-container">
+                            <img src="https://via.placeholder.com/280x200/4ECDC4/FFFFFF?Text=NFT+Art+2" alt="NFT Art 2">
+                        </div>
+                        <div class="card-content">
+                            <div class="card-collection-info">
+                                <span class="collection-name">Bored Ape YC</span>
+                                <span class="status-dot"></span>
+                            </div>
+                            <h3 class="card-title">Ape #1234</h3>
+                            <div class="card-info-bottom">
+                                <div class="info-left">
+                                    <span class="info-label">Status</span>
+                                    <span class="info-value">Completed</span>
+                                </div>
+                                <div class="info-right">
+                                    <span class="info-label">Price</span>
+                                    <span class="info-value price">0.02 ETH</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 3 -->
+                    <div class="swiper-slide">
+                        <div class="card-image-container">
+                            <img src="https://via.placeholder.com/280x200/5E548E/FFFFFF?Text=NFT+Art+3" alt="NFT Art 3">
+                        </div>
+                        <div class="card-content">
+                            <div class="card-collection-info">
+                                <span class="collection-name">Art Blocks</span>
+                                <span class="status-dot blue"></span>
+                            </div>
+                            <h3 class="card-title">Chromie Squiggle</h3>
+                            <div class="card-info-bottom">
+                                <div class="info-left">
+                                    <span class="info-label">Minting</span>
+                                    <span class="info-value" style="color: #30a14e;">Now</span>
+                                </div>
+                                <div class="info-right">
+                                    <span class="info-label">Price</span>
+                                    <span class="info-value price">10 APT</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 4 -->
+                    <div class="swiper-slide">
+                        <div class="card-image-container">
+                            <img src="https://via.placeholder.com/280x200/FAD02E/000000?Text=NFT+Art+4" alt="NFT Art 4">
+                        </div>
+                        <div class="card-content">
+                            <div class="card-collection-info">
+                                <span class="collection-name">Cool Cats</span>
+                                <span class="status-dot"></span>
+                            </div>
+                            <h3 class="card-title">Cat #555</h3>
+                            <div class="card-info-bottom">
+                                <div class="info-left">
+                                    <span class="info-label">Status</span>
+                                    <span class="info-value">Auction</span>
+                                </div>
+                                <div class="info-right">
+                                    <span class="info-label">Highest Bid</span>
+                                    <span class="info-value price">2.5 SOL</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Card 5 (Adicionar mais se quiser) -->
+                    <div class="swiper-slide">
+                        <div class="card-image-container">
+                            <img src="https://via.placeholder.com/280x200/A2D2FF/000000?Text=NFT+Art+5" alt="NFT Art 5">
+                        </div>
+                        <div class="card-content">
+                            <div class="card-collection-info">
+                                <span class="collection-name">Doodles</span>
+                                <span class="status-dot blue"></span>
+                            </div>
+                            <h3 class="card-title">Doodle #789</h3>
+                            <div class="card-info-bottom">
+                                <div class="info-left">
+                                    <span class="info-label">Listed by</span>
+                                    <span class="info-value">UserX</span>
+                                </div>
+                                <div class="info-right">
+                                    <span class="info-label">Price</span>
+                                    <span class="info-value price">0.8 ETH</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <input type="password" id="signup-password" placeholder="Senha" required />
-                <input type="password" id="signup-confirm-password" placeholder="Confirme a Senha" required />
-                 <p id="signup-error-message" class="error-message"></p>
-                <button type="submit">Cadastrar</button>
-            </form>
-        </div>
-
-        <!-- Sign In Form -->
-        <div class="form-container sign-in-container">
-            <form id="login-form">
-                <h1>Fazer Login</h1>
-                <div class="social-container">
-                    <a href="#" class="social"><i class="fab fa-google"></i></a>
-                    <a href="#" class="social"><i class="fab fa-github"></i></a>
-                </div>
-                <span>ou use sua conta</span>
-                <input type="email" id="login-email" placeholder="E-mail" required />
-                <input type="password" id="login-password" placeholder="Senha" required />
-                 <p id="login-message" class="error-message"></p> <!-- Still needed for error messages -->
-                <button type="submit">Entrar</button>
-            </form>
-        </div>
-
-        <!-- Overlay Panels -->
-        <div class="overlay-container">
-            <div class="overlay">
-                <div class="overlay-panel overlay-left">
-                    <h2>Já tem uma conta?</h2>
-                    <p>Faça login para acessar sua conta e continuar sua jornada financeira.</p>
-                    <button class="ghost-btn" id="signIn">Faça login</button>
-                </div>
-                <div class="overlay-panel overlay-right">
-                    <h2>Não tem uma conta?</h2>
-                    <p>Cadastre-se com algumas informações e comece a organizar suas finanças!</p>
-                    <button class="ghost-btn" id="signUp">Cadastre-se</button>
-                </div>
+                <!-- Adicionar Paginação -->
+                <div class="swiper-pagination"></div>
+                <!-- Adicionar Botões de Navegação -->
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
             </div>
         </div>
-    </div>
 
-    <!-- Adicione os scripts do Firebase -->
-    <script type="module" src="firebase-config.js"></script>
-    
-    <script type="module">
-        import { registerUser, loginUser, checkAuthState } from './firebase-config.js';
+        <!-- Aqui você pode adicionar os outros exemplos de carrossel se desejar, -->
+        <!-- lembrando de dar classes únicas aos containers e inicializá-los no JS -->
 
-        document.addEventListener('DOMContentLoaded', function() {
-            const signUpButton = document.getElementById('signUp');
-            const signInButton = document.getElementById('signIn');
-            const container = document.getElementById('container');
-            const loginForm = document.getElementById('login-form');
-            const signupForm = document.getElementById('signup-form');
-            const loginEmailInput = document.getElementById('login-email');
-            const loginPasswordInput = document.getElementById('login-password');
-            const loginMessage = document.getElementById('login-message');
-            const signupEmailInput = document.getElementById('email');
-            const signupPasswordInput = document.getElementById('signup-password');
-            const signupErrorMessage = document.getElementById('signup-error-message');
+    </div> <!-- Fim .page-container -->
 
-            // Panel Switching
-            if (signUpButton) {
-                signUpButton.addEventListener('click', () => {
-                    container.classList.add("right-panel-active");
-                    loginMessage.textContent = '';
-                    signupErrorMessage.textContent = '';
-                });
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        // Carrossel de Cards (Estilo Rarible)
+        var swiperCards = new Swiper('.card-carousel .swiper-container', { // Selecionar o container correto
+            slidesPerView: 'auto', // Para que a largura do CSS do slide seja respeitada
+            spaceBetween: 20,      // Espaço entre os cards
+            grabCursor: true,
+            loop: false,           // Loop geralmente não é usado com 'auto' e quando há um fim claro
+            watchSlidesProgress: true, // Útil para efeitos mais avançados se necessário
+
+            pagination: {
+                el: '.card-carousel .swiper-pagination',
+                clickable: true,
+            },
+            navigation: {
+                nextEl: '.card-carousel .swiper-button-next',
+                prevEl: '.card-carousel .swiper-button-prev',
+            },
+            breakpoints: {
+                // Quando a largura da janela é >= 320px
+                320: {
+                    spaceBetween: 15,
+                },
+                // Quando a largura da janela é >= 768px
+                768: {
+                    spaceBetween: 20,
+                },
+                // Quando a largura da janela é >= 1024px
+                1024: {
+                    spaceBetween: 25,
+                }
             }
-            if (signInButton) {
-                signInButton.addEventListener('click', () => {
-                    container.classList.remove("right-panel-active");
-                    loginMessage.textContent = '';
-                    signupErrorMessage.textContent = '';
-                });
-            }
-
-            // Login
-            if (loginForm) {
-                loginForm.addEventListener('submit', async (event) => {
-                    event.preventDefault();
-                    loginMessage.textContent = '';
-                    loginMessage.className = 'error-message';
-
-                    const email = loginEmailInput.value.trim();
-                    const password = loginPasswordInput.value;
-
-                    try {
-                        await loginUser(email, password);
-                        console.log('Login bem-sucedido para:', email);
-                        container.classList.remove('visible');
-                        container.classList.add('hidden');
-                    } catch (error) {
-                        console.log('Falha no login para:', email);
-                        loginMessage.textContent = 'E-mail ou senha inválidos.';
-                    }
-                });
-            }
-
-            // Registro
-            if (signupForm) {
-                signupForm.addEventListener('submit', async (event) => {
-                    event.preventDefault();
-                    signupErrorMessage.textContent = '';
-                    signupErrorMessage.className = 'error-message';
-
-                    const name = document.getElementById('name').value;
-                    const email = signupEmailInput.value.trim();
-                    const password = signupPasswordInput.value;
-
-                    if (!email || !password) {
-                        signupErrorMessage.textContent = 'Por favor, preencha todos os campos.';
-                        return;
-                    }
-                    if (password.length < 6) {
-                        signupErrorMessage.textContent = 'A senha deve ter pelo menos 6 caracteres.';
-                        return;
-                    }
-
-                    try {
-                        await registerUser(email, password, name);
-                        signupErrorMessage.textContent = 'Cadastro realizado com sucesso! Redirecionando...';
-                        signupErrorMessage.className = 'success-message';
-                        container.classList.remove('right-panel-active');
-                    } catch (error) {
-                        signupErrorMessage.textContent = 'Erro ao registrar: ' + error.message;
-                    }
-                });
-            }
-
-            // Verificar estado da autenticação ao carregar a página
-            checkAuthState();
         });
-    </script>
 
+        // Para inicializar outros Swipers, siga o padrão:
+        // var swiperNomeUnico = new Swiper('.classe-do-container-swiper', { /* ...opções... */ });
+    </script>
 </body>
 </html>
